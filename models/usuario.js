@@ -11,11 +11,6 @@ const UsuarioSchema = new mongoose.Schema({
     required: [true, "Error apellido es obligatorio"],
   },
 
-  nickName: {
-    type: String,
-    unique: true,
-  },
-
   correo: {
     type: String,
     required: [true, "Error correo es obligatorio"],
@@ -31,10 +26,9 @@ const UsuarioSchema = new mongoose.Schema({
     type: String,
   },
 
-  role: {
+  rol: {
     type: String,
-    default: "USER_ROLE",
-    enum: ["ADMIN_ROLE", "USER_ROLE"],
+    enum: ["ADMIN_ROL", "USER_ROL", "VENTAS_ROL"],
   },
 
   estado: {

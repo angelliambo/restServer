@@ -7,6 +7,7 @@ const {
   usuariosPatch,
   usuariosDelete,
 } = require("../controllers/users");
+const { isValidRol } = require("../helpers/db-validators");
 const { validarCampos } = require("../middleware/validar-campos");
 
 const router = Router();
@@ -23,7 +24,7 @@ router.post(
       min: 6,
     }),
     check("correo", "Formato de correo inválido").isEmail(),
-    check("role", "No es un Role válido").isIn(["ADMIN_ROLE", "USER_ROLE"]),
+    check("rol").custom((rol) => isValidRol(rol)),
     validarCampos,
   ],
   usuariosPost
