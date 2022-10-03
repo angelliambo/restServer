@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const UsuarioSchema = new mongoose.Schema({
+const UsuarioSchema = new Schema({
   nombre: {
     type: String,
     required: [true, "Error nombre es obligatorio"],
@@ -41,6 +41,13 @@ const UsuarioSchema = new mongoose.Schema({
     default: false,
   },
 });
-const Usuario = mongoose.model("Usuario", UsuarioSchema);
+
+// Quitamos valores no deseados de la respuesta
+UsuarioSchema.methods.toJSON = function () {
+  const { password, __v, ...usuario } = this.toObject();
+  return usuario;
+};
+
+const Usuario = model("Usuario", UsuarioSchema);
 
 module.exports = Usuario;
