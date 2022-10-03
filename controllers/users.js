@@ -29,14 +29,6 @@ const usuariosPost = async (req, res = response) => {
     password,
   });
 
-  // verif correo en uso
-  const existEmail = await Usuario.findOne({ correo });
-  if (existEmail) {
-    return res.status(400).json({
-      msg: "Error email en uso",
-    });
-  }
-
   //encryp pass
   const salt = bcrypt.genSaltSync();
   usuario.password = bcrypt.hashSync(password, salt);
