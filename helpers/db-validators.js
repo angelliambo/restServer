@@ -17,7 +17,16 @@ const isValidEmail = async (correo) => {
   }
 };
 
+// Verificamos correo en uso
+const userFoundById = async (id) => {
+  const userExist = await Usuario.findById(id);
+  if (!userExist) {
+    throw new Error(`El usuario id: ${id}, no se encuentra en BBD`);
+  }
+};
+
 module.exports = {
   isValidRol,
   isValidEmail,
+  userFoundById,
 };

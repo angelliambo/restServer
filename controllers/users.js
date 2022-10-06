@@ -1,32 +1,52 @@
-const { response, request } = require("express");
+const { response, request, query } = require("express");
 const bcrypt = require("bcryptjs");
 const Usuario = require("../models/usuario.js");
 const { Error } = require("mongoose");
+const { isValidRol } = require("../helpers/db-validators.js");
 
-const usuariosGet = (req = request, res = response) => {
-  const query = req.query;
+const usuariosGet = async (req = request, res = response) => {
+  const { limit = 10 } = req.query;
+  const onlyActiveUsers = { estado: true };
+
+  const [total, usuarios] = await Promise.all([
+    Usuario.countDocuments(onlyActiveUsers),
+    Usuario.find(onlyActiveUsers).limit(Number(limit)),
+  ]).catch((error) => console.log(error.msg));
+
   res.json({
-    msg: "controlador Get",
-    query,
+    total,
+    usuarios,
   });
 };
 
-const usuariosPut = (req, res = response) => {
-  const { id } = req.params.id;
+const usuariosPut = async (req, res = response) => {
+  const id = req.params.id;
+  const { _id, password, google, correo, ...resto } = req.body;
+
+  // validad contra BBD
+  if (password) {
+    //encryp pass
+    const salt = bcrypt.genSaltSync();
+    resto.password = bcrypt.hashSync(password, salt);
+  }
+
+  const usuario = await Usuario.findByIdAndUpdate(id, resto);
+  isValidRol(resto.rol);
   res.json({
-    msg: "controlador Put",
-    id: id,
+    id: req.params.id,
+    usuario: usuario,
   });
 };
 
 const usuariosPost = async (req, res = response) => {
-  const { nombre, apellido, correo, password } = req.body;
+  const { nombre, apellido, correo, password, rol } = req.body;
 
   const usuario = new Usuario({
     nombre,
     apellido,
     correo,
     password,
+    rol,
   });
 
   //encryp pass
@@ -36,7 +56,6 @@ const usuariosPost = async (req, res = response) => {
   try {
     await usuario.save();
     res.json({
-      msg: "controlador Post",
       usuario,
     });
   } catch (error) {
