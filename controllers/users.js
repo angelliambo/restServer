@@ -5,7 +5,7 @@ const { Error } = require("mongoose");
 const { isValidRol } = require("../helpers/db-validators.js");
 
 const usuariosGet = async (req = request, res = response) => {
-  const { limit = 10 } = req.query;
+  const { limit } = req.query;
   const onlyActiveUsers = { estado: true };
 
   const [total, usuarios] = await Promise.all([
@@ -69,9 +69,17 @@ const usuariosPatch = (req, res = response) => {
   });
 };
 
-const usuariosDelete = (req, res = response) => {
+const usuariosDelete = async (req, res = response) => {
+  const id = req.params.id;
+  const { password, google, ...resto } = req.body;
+  const queryParam = { estado: false };
+  // const usuario = await Usuario.findByIdAndDelete(id);
+
+  const usuario = await Usuario.findByIdAndUpdate(id, queryParam);
+
   res.json({
-    msg: "controlador Delete",
+    msg: "Usuario eliminado con exito",
+    usuario,
   });
 };
 

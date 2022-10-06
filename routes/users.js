@@ -11,6 +11,7 @@ const {
   isValidRol,
   isValidEmail,
   userFoundById,
+  userIsActive,
 } = require("../helpers/db-validators");
 const { validarCampos } = require("../middleware/validar-campos");
 
@@ -23,6 +24,7 @@ router.put(
   [
     check("id", "No es un id válido").isMongoId(),
     check("id").custom((id) => userFoundById(id)),
+    check("id").custom((id) => userIsActive(id)),
     validarCampos,
   ],
   usuariosPut
@@ -45,6 +47,15 @@ router.post(
 
 router.patch("/", usuariosPatch);
 
-router.delete("/", usuariosDelete);
+router.delete(
+  "/:id",
+  [
+    check("id", "No es un id válido").isMongoId(),
+    check("id").custom((id) => userFoundById(id)),
+    check("id").custom((id) => userIsActive(id)),
+    validarCampos,
+  ],
+  usuariosDelete
+);
 
 module.exports = router;

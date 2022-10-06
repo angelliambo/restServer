@@ -25,8 +25,20 @@ const userFoundById = async (id) => {
   }
 };
 
+// Verificamos que sea un usuario activo
+const userIsActive = async (id) => {
+  const userExist = await Usuario.findById(id);
+  const userEmail = userExist.correo;
+  if (userExist.estado === false) {
+    throw new Error(
+      `El usuario id: ${id} correo: ${userEmail}, fue dado de baja`
+    );
+  }
+};
+
 module.exports = {
   isValidRol,
   isValidEmail,
   userFoundById,
+  userIsActive,
 };
