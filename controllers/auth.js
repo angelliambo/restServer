@@ -11,14 +11,14 @@ const login = async (req, res = response) => {
 
     if (!usuario) {
       return res.status(400).json({
-        msg: "Usuario/password no existe -correo",
+        msg: "Usuario/password no existe",
       });
     }
 
     // Verificar usuario activo
     if (!usuario.estado) {
       return res.status(400).json({
-        msg: "Usuario/password no existe -estado",
+        msg: "Usuario/password no existe",
       });
     }
 
@@ -27,7 +27,7 @@ const login = async (req, res = response) => {
 
     if (!passwordIsValid) {
       return res.status(400).json({
-        msg: "Usuario/password no existe -password",
+        msg: "Usuario/password no existe",
       });
     }
     // Generar JWT
