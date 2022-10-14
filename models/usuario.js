@@ -44,7 +44,8 @@ const UsuarioSchema = new Schema({
 
 // Quitamos valores no deseados de la respuesta
 UsuarioSchema.methods.toJSON = function () {
-  const { password, __v, ...usuario } = this.toObject();
+  const { password, __v, _id, ...usuario } = this.toObject();
+  usuario.uid = _id;
   return usuario;
 };
 
