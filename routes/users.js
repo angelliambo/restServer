@@ -3,6 +3,7 @@ const { check } = require("express-validator");
 // middleware
 const { validarCampos } = require("../middleware/validar-campos");
 const { validateJWT } = require("../middleware/validar-jwt");
+const { isAdminRol, allowedRol } = require("../middleware/validar-rol");
 // controllers
 const {
   usuariosGet,
@@ -55,6 +56,7 @@ router.delete(
   "/:id",
   [
     validateJWT,
+    allowedRol("ADMIN_ROL", "VENTAS_ROL"),
     check("id", "No es un id válido").isMongoId(),
     check("id").custom((id) => userFoundById(id)),
     check("id").custom((id) => userIsActive(id)),
