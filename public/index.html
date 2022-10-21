@@ -1,12 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado</title>
-</head>
-<body>
-    <H1>Acceso denegado</H1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google signin</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <h1>Google signin</h1>
+    <hr />
+    <div
+      id="g_id_onload"
+      data-client_id="54231403609-uefie3eh6ellpjukt8cot3mukt4nb978.apps.googleusercontent.com"
+      data-callback="handleCredentialResponse"
+      data-auto_prompt="false"
+    ></div>
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left"
+    ></div>
+  </body>
+  <script>
+    function handleCredentialResponse(response) {
+      // google token
+      //   console.log("G_token", response.credential);
+
+      const body = {
+        id_token: response.credential,
+      };
+
+      fetch("http://localhost:5000/api/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type":"application/json",
+        },
+        body: JSON.stringify(body),
+      })
+        .then((resp) => {
+          resp.json();
+        })
+        .then((resp) => console.log({ resp }))
+        .catch(console.warn);
+    }
+  </script>
 </html>

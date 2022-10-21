@@ -30,7 +30,7 @@ const usuariosPut = async (req, res = response) => {
     resto.password = bcrypt.hashSync(password, salt);
   }
 
-  const usuario = await Usuario.findByIdAndUpdate(id, resto);
+  const usuario = await Usuario.findByIdAndUpdate(id, resto, { new: true });
   isValidRol(resto.rol);
   res.json({
     id: req.params.id,
@@ -75,7 +75,9 @@ const usuariosDelete = async (req, res = response) => {
   const queryParam = { estado: false };
   // const usuario = await Usuario.findByIdAndDelete(id);
 
-  const usuario = await Usuario.findByIdAndUpdate(id, queryParam);
+  const usuario = await Usuario.findByIdAndUpdate(id, queryParam, {
+    new: true,
+  });
 
   res.json({
     msg: "Usuario eliminado con exito",
